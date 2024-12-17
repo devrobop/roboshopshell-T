@@ -5,6 +5,7 @@ dnf install maven -y
 
 useradd roboshop
 
+rm -rf /app
 
 mkdir /app 
 
