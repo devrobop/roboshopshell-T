@@ -20,7 +20,7 @@ mv target/shipping-1.0.jar shipping.jar
 systemctl daemon-reload
 
 systemctl enable shipping 
-systemctl start shipping
+systemctl restart shipping
 
 
 dnf install mysql -y 

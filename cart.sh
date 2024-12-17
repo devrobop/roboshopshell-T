@@ -7,6 +7,8 @@ dnf install nodejs -y
 
 useradd roboshop
 
+rm-rf /app
+
 mkdir /app 
 
 curl -L -o /tmp/cart.zip https://roboshop-artifacts.s3.amazonaws.com/cart-v3.zip
@@ -19,4 +21,4 @@ npm install
 systemctl daemon-reload
 
 systemctl enable cart 
-systemctl start cart
+systemctl restart cart
