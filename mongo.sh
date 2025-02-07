@@ -1,10 +1,21 @@
-cp mongo.repo /etc/yum.repos.d/mongo.repo   
+source common.sh
+component=mongo
 
-dnf install mongodb-org -y 
 
-systemctl enable mongod 
-systemctl restart mongod 
+PRINT Copy repo file 
+cp mongo.repo /etc/yum.repos.d/mongo.repo &>>$LOG_FILE
+STAT $?
 
-# Update listen address from 127.0.0.1 to 0.0.0.0 in /etc/mongod.conf
+PRINT Installing Mongo
+dnf install mongodb-org -y &>>$LOG_FILE
+STAT $?
 
-systemctl restart mongod
+
+PRINT Updating Config file 
+sed -i 's/127.0.0.1/0.0.0.0/' /etc/mongod.conf &>>$LOG_FILE
+STAT $?
+
+PRINT Start Mongodb service
+systemctl enable mongod &>>$LOG_FILE
+systemctl restart mongod &>>$LOG_FILE
+STAT $?

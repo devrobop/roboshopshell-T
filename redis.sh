@@ -1,15 +1,25 @@
-dnf module disable redis -y
-dnf module enable redis:7 -y
+source common.sh
+component=redis
 
-dnf install redis -y 
 
-# Update listen address from 127.0.0.1 to 0.0.0.0 in /etc/redis/redis.conf
+PRINT Disable previous content
+dnf module disable redis -y &>>$LOG_FILE
+STAT $?
 
-sed -i 's/127.0.0.1/0.0.0.0/g' /etc/redis/redis.conf
+PRINT Enabling version 7
+dnf module enable redis:7 -y &>>$LOG_FILE
+STAT $?
 
-# Update protected-mode from yes to no in /etc/redis/redis.conf
+PRINT Install redis
+dnf install redis -y &>>$LOG_FILE
+STAT $?
 
-sed -i 's/protected-mode yes/protected-mode no/g' /etc/redis/redis.conf
+PRINT Updating Config file 
+sed -i '/^bind/ s/127.0.0.1/0.0.0.0/' /etc/redis/redis.conf  &>>$LOG_FILE
+sed -i '/protected-mode/ c protected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
+STAT $?
 
-systemctl enable redis 
-systemctl restart redis 
+PRINT Starting redis
+systemctl enable redis &>>$LOG_FILE
+systemctl restart redis &>>$LOG_FILE
+STAT $?
